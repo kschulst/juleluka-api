@@ -5,10 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import no.juleluka.api.api.CalendarForParticipant;
-import no.juleluka.api.api.CalendarPublic;
-import no.juleluka.api.api.ParticipantPublic;
-import no.juleluka.api.api.ParticipantToken;
+import no.juleluka.api.api.*;
 import no.juleluka.api.core.security.AuthTokenService;
 import no.juleluka.api.db.CalendarRepository;
 import no.juleluka.api.models.Calendar;
@@ -45,9 +42,9 @@ public class CalendarResource {
 
     @GET
     @Path("/test")
-    public String test() {
+    public CalendarNew test() {
         log.info("GET test");
-        return "test-" + UUID.randomUUID().toString();
+        return new CalendarNew("asd" + UUID.randomUUID().toString(), "123456" );
     }
 
 

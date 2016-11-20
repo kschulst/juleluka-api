@@ -5,6 +5,7 @@ import io.jsonwebtoken.impl.crypto.MacProvider;
 import lombok.extern.slf4j.Slf4j;
 import no.juleluka.api.models.Participant;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,8 +18,14 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public class AuthTokenService {
 
     // TODO: Read key from config
-    private final Key KEY = MacProvider.generateKey();
+    private final Key KEY;
+//    private final Key KEY = MacProvider.generateKey();
     private final String CALENDAR_SUBJECT_PREFIX = "calendars/";
+
+    public AuthTokenService() {
+        byte[] keyPhrase = "secret".getBytes(); // TODO: read key phrase from config
+        KEY = new SecretKeySpec("secret".getBytes(), 0, keyPhrase.length, "DES");
+    }
 
     public String newCalendarAuthToken(String calendarId) {
         checkArgument(!isNullOrEmpty(calendarId), "calendarId is required for creating an auth token");

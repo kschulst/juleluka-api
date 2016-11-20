@@ -2,6 +2,7 @@ package no.juleluka.api.resources;
 
 import com.google.inject.Inject;
 import io.jsonwebtoken.JwtException;
+import lombok.extern.slf4j.Slf4j;
 import no.juleluka.api.core.security.AuthTokenService;
 import no.juleluka.api.db.AuthTokenRepository;
 import no.juleluka.api.db.CalendarRepository;
@@ -15,6 +16,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
+@Slf4j
 public class CalendarService {
 
     private final CalendarRepository calendarRepository;
@@ -59,6 +61,7 @@ public class CalendarService {
             calendarId = authTokenService.parseCalendarId(authToken);
         }
         catch (JwtException e) {
+            log.info("Unable to determine calendar from auth token. " + e.getMessage());
             throw new WebApplicationException("Unable to determine calendar from auth token", Response.Status.UNAUTHORIZED);
         }
 

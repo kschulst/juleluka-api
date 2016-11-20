@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 
 @Api("calendar - participants")
-@Path("/calendar")
+@Path("/public/calendar")
 @Produces(MediaType.APPLICATION_JSON)
 @Slf4j
 public class CalendarResource {

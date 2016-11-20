@@ -44,10 +44,12 @@ public class CalendarAdminResource {
                                  CalendarService calendarService,
                                  AuthTokenRepository authTokenRepository,
                                  AuthTokenService authTokenService) {
+log.info("CalendarAdminResource constructor start");
         this.calendarRepository = requireNonNull(calendarRepository);
         this.calendarService = requireNonNull(calendarService);
         this.authTokenRepository = requireNonNull(authTokenRepository);
         this.authTokenService = requireNonNull(authTokenService);
+log.info("CalendarAdminResource constructor done");
     }
 
     @GET

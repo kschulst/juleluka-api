@@ -23,6 +23,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -47,6 +48,13 @@ public class CalendarAdminResource {
         this.calendarService = requireNonNull(calendarService);
         this.authTokenRepository = requireNonNull(authTokenRepository);
         this.authTokenService = requireNonNull(authTokenService);
+    }
+
+    @GET
+    @Path("/test")
+    public String test() {
+        log.info("GET test");
+        return "test-" + UUID.randomUUID().toString();
     }
 
     @ApiOperation("Create a new calendar")

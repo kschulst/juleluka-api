@@ -3,7 +3,6 @@ package no.juleluka.api.resources;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import io.jsonwebtoken.JwtException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +10,9 @@ import no.juleluka.api.api.*;
 import no.juleluka.api.core.security.AuthTokenService;
 import no.juleluka.api.db.AuthTokenRepository;
 import no.juleluka.api.db.CalendarRepository;
-import no.juleluka.api.models.*;
+import no.juleluka.api.models.AuthToken;
+import no.juleluka.api.models.Calendar;
 import no.juleluka.api.models.Participant;
-import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -22,51 +21,37 @@ import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
 @Api("calendar - admin")
-@Path("/admin/calendar")
+@Path("/edit/calendar")
 @Produces(MediaType.APPLICATION_JSON)
 @Slf4j
-public class CalendarAdminResource {
+public class CalendarEditResource {
 
     private final CalendarRepository calendarRepository;
     private final CalendarService calendarService;
-//    private final AuthTokenRepository authTokenRepository;
+    private final AuthTokenRepository authTokenRepository;
     private final AuthTokenService authTokenService;
 
     @Inject
-    public CalendarAdminResource(CalendarRepository calendarRepository,
-                                 CalendarService calendarService,
-//                                 AuthTokenRepository authTokenRepository,
-                                 AuthTokenService authTokenService) {
-log.info("CalendarAdminResource constructor start");
+    public CalendarEditResource(CalendarRepository calendarRepository,
+                                CalendarService calendarService,
+                                AuthTokenRepository authTokenRepository,
+                                AuthTokenService authTokenService) {
         this.calendarRepository = requireNonNull(calendarRepository);
         this.calendarService = requireNonNull(calendarService);
-//        this.authTokenRepository = requireNonNull(authTokenRepository);
+        this.authTokenRepository = requireNonNull(authTokenRepository);
         this.authTokenService = requireNonNull(authTokenService);
-log.info("CalendarAdminResource constructor done");
-    }
-
-    @GET
-    @Path("/test")
-    public CalendarNew test() {
-        log.info("GET test");
-        return new CalendarNew("asd" + UUID.randomUUID().toString(), "123456" );
     }
 
     @ApiOperation("Create a new calendar")
     @POST
     public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {
-log.info("Creating new calendar");
         Calendar cal = newCalendar.toCalendar();
-log.info("Cal: " + cal);
         calendarRepository.save(cal);
-log.info("After save");
         return CalendarAdmin.from(cal);
     }
 
@@ -81,7 +66,7 @@ log.info("After save");
         }
 
         String authToken = authTokenService.newCalendarAuthToken(cal.getId().toString());
-//        authTokenRepository.save(new AuthToken(authToken));
+        authTokenRepository.save(new AuthToken(authToken));
 
         CalendarAuth calAuth = new CalendarAuth();
         calAuth.setCalendarId(cal.getId().toString());

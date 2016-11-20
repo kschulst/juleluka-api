@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 
 @Api("calendar - participants")
-@Path("/public/calendar")
+@Path("/calendar")
 @Produces(MediaType.APPLICATION_JSON)
 @Slf4j
 public class CalendarResource {
@@ -39,7 +39,6 @@ public class CalendarResource {
         this.calendarService = requireNonNull(calendarService);
         this.authTokenService = requireNonNull(authTokenService);
     }
-
 
     @ApiOperation("Participant lookup")
     @GET

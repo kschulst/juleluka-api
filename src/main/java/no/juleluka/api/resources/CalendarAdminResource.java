@@ -52,8 +52,11 @@ public class CalendarAdminResource {
     @ApiOperation("Create a new calendar")
     @POST
     public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {
+log.info("Creating new calendar");
         Calendar cal = newCalendar.toCalendar();
+log.info("Cal: " + cal);
         calendarRepository.save(cal);
+log.info("After save");
         return CalendarAdmin.from(cal);
     }
 

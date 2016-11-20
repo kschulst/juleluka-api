@@ -21,11 +21,10 @@ import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
-@Api("calendar - admin")
+@Api("calendar - edit")
 @Path("/edit/calendar")
 @Produces(MediaType.APPLICATION_JSON)
 @Slf4j

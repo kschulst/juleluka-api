@@ -36,18 +36,18 @@ public class CalendarAdminResource {
 
     private final CalendarRepository calendarRepository;
     private final CalendarService calendarService;
-    private final AuthTokenRepository authTokenRepository;
+//    private final AuthTokenRepository authTokenRepository;
     private final AuthTokenService authTokenService;
 
     @Inject
     public CalendarAdminResource(CalendarRepository calendarRepository,
                                  CalendarService calendarService,
-                                 AuthTokenRepository authTokenRepository,
+//                                 AuthTokenRepository authTokenRepository,
                                  AuthTokenService authTokenService) {
 log.info("CalendarAdminResource constructor start");
         this.calendarRepository = requireNonNull(calendarRepository);
         this.calendarService = requireNonNull(calendarService);
-        this.authTokenRepository = requireNonNull(authTokenRepository);
+//        this.authTokenRepository = requireNonNull(authTokenRepository);
         this.authTokenService = requireNonNull(authTokenService);
 log.info("CalendarAdminResource constructor done");
     }
@@ -58,7 +58,7 @@ log.info("CalendarAdminResource constructor done");
         log.info("GET test");
         return new CalendarNew("asd" + UUID.randomUUID().toString(), "123456" );
     }
-    
+
     @ApiOperation("Create a new calendar")
     @POST
     public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {
@@ -81,7 +81,7 @@ log.info("After save");
         }
 
         String authToken = authTokenService.newCalendarAuthToken(cal.getId().toString());
-        authTokenRepository.save(new AuthToken(authToken));
+//        authTokenRepository.save(new AuthToken(authToken));
 
         CalendarAuth calAuth = new CalendarAuth();
         calAuth.setCalendarId(cal.getId().toString());

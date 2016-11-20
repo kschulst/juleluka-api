@@ -1,0 +1,1 @@
+web    java $JAVA_OPTS -Ddw.server.connector.port=$PORT -jar target/juleluka-api-0.1.0-SNAPSHOT.jar server config-heroku.yml

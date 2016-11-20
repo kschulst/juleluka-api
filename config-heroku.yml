@@ -1,0 +1,19 @@
+logging:
+  level: INFO
+  loggers:
+    no.juleluka.api: DEBUG
+
+swagger:
+  # a comma separated string of the packages that contain your @Api annotated resources
+  resourcePackage: no.juleluka.api.resources
+  swaggerViewConfiguration:
+    pageTitle: Juleluka API
+
+mongo:
+  seeds:
+  - host: localhost
+    port: 27017
+  database: juleluka
+#  credentials:
+#    userName: juleluka
+#    password: julealuka

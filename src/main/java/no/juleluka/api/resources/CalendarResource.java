@@ -5,7 +5,8 @@ import io.jsonwebtoken.JwtException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import no.juleluka.api.api.*;
+import no.juleluka.api.api.CalendarForParticipant;
+import no.juleluka.api.api.ParticipantToken;
 import no.juleluka.api.core.security.AuthTokenService;
 import no.juleluka.api.db.CalendarRepository;
 import no.juleluka.api.models.Calendar;
@@ -15,7 +16,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -38,13 +38,6 @@ public class CalendarResource {
         this.calendarRepository = requireNonNull(calendarRepository);
         this.calendarService = requireNonNull(calendarService);
         this.authTokenService = requireNonNull(authTokenService);
-    }
-
-    @GET
-    @Path("/test")
-    public CalendarNew test() {
-        log.info("GET test");
-        return new CalendarNew("asd" + UUID.randomUUID().toString(), "123456" );
     }
 
 

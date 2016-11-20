@@ -54,11 +54,11 @@ log.info("CalendarAdminResource constructor done");
 
     @GET
     @Path("/test")
-    public String test() {
+    public CalendarNew test() {
         log.info("GET test");
-        return "test-" + UUID.randomUUID().toString();
+        return new CalendarNew("asd" + UUID.randomUUID().toString(), "123456" );
     }
-
+    
     @ApiOperation("Create a new calendar")
     @POST
     public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {

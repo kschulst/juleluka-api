@@ -12,6 +12,7 @@ import no.juleluka.api.db.AuthTokenRepository;
 import no.juleluka.api.db.CalendarRepository;
 import no.juleluka.api.models.AuthToken;
 import no.juleluka.api.models.Calendar;
+import no.juleluka.api.models.Door;
 import no.juleluka.api.models.Participant;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -21,6 +22,8 @@ import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -49,6 +52,11 @@ public class CalendarEditResource {
     @ApiOperation("Create a new calendar")
     @POST
     public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {
+        // Don't create the calendar if a calendar for that companyName is already registered
+        if (calendarRepository.findOne("companyName", newCalendar) != null) {
+            throw new WebApplicationException("Calendar for '" + newCalendar.getCompanyName() + "' already exists.", Response.Status.CONFLICT);
+        };
+
         Calendar cal = newCalendar.toCalendar();
         calendarRepository.save(cal);
         return CalendarAdmin.from(cal);
@@ -76,7 +84,7 @@ public class CalendarEditResource {
 
     @ApiOperation("Retrieve calendar for administration by id")
     @GET
-    public CalendarAdmin getCalendarById(@HeaderParam("Authorization") String authToken) {
+    public CalendarAdmin getCalendarById(@HeaderParam("Authorization") @NotEmpty String authToken) {
         Calendar cal = calendarService.findCalendarById(calendarId(authToken));
         return CalendarAdmin.from(cal);
     }
@@ -84,18 +92,21 @@ public class CalendarEditResource {
     @ApiOperation("Update a calendar door")
     @PUT
     @Path("/doors/{doorNumber}")
-    public void updateDoor(@HeaderParam("Authorization") String authToken,
+    public void updateDoor(@HeaderParam("Authorization") @NotEmpty String authToken,
                            @PathParam("doorNumber") @Min(1) @Max(24) Integer doorNumber,
                            @Valid DoorAdmin doorToUpdate) {
         Calendar cal = calendarService.findCalendarById(calendarId(authToken));
+        Door door = doorToUpdate.toDoor();
+        door.setNumber(doorNumber); // TODO: Two separate models for Doors (request vs response)
         cal.getDoors().set(doorNumber-1, doorToUpdate.toDoor());
+
         calendarRepository.save(cal);
     }
 
     @ApiOperation("Add a calendar participant")
     @POST
     @Path("/participants")
-    public void addParticipant(@HeaderParam("Authorization") String authToken,
+    public void addParticipant(@HeaderParam("Authorization") @NotEmpty String authToken,
                            final @Valid ParticipantNew newParticipant) {
         Calendar cal = calendarService.findCalendarById(calendarId(authToken));
 
@@ -116,8 +127,8 @@ public class CalendarEditResource {
     @ApiOperation("Delete a calendar participant")
     @DELETE
     @Path("/participants/{participantId}")
-    public void deleteParticipant(@HeaderParam("Authorization") String authToken,
-                                  @PathParam("participantId") Long participantId) {
+    public void deleteParticipant(@HeaderParam("Authorization") @NotEmpty String authToken,
+                                  @PathParam("participantId") String participantId) {
         Calendar cal = calendarService.findCalendarById(calendarId(authToken));
 
         boolean removed = cal.getParticipants().removeIf(new java.util.function.Predicate<Participant>() {

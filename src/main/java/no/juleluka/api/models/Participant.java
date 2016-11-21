@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 public class Participant {
 
     public Participant(String name) {
-        this.id = System.currentTimeMillis();
+        this.id = ""+System.currentTimeMillis();
         this.name = name;
     }
 
-    private Long id;
+    private String id;
     private String name;
 }

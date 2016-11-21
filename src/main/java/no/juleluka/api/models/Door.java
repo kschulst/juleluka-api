@@ -3,6 +3,9 @@ package no.juleluka.api.models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 public class Door {
@@ -14,5 +17,6 @@ public class Door {
     private String prize;
     private String quote;
     private String instructions;
-    // TODO: Winners
+    private Set<String> openedBy = new HashSet();
+    private Set<String> winners = new HashSet();
 }

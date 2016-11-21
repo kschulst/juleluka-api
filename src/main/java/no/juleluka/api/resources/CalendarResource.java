@@ -6,13 +6,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import no.juleluka.api.api.CalendarForParticipant;
+import no.juleluka.api.api.DoorForParticipant;
 import no.juleluka.api.api.ParticipantToken;
 import no.juleluka.api.core.security.AuthTokenService;
 import no.juleluka.api.db.CalendarRepository;
 import no.juleluka.api.models.Calendar;
+import no.juleluka.api.models.Door;
 import no.juleluka.api.models.Participant;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -71,16 +75,27 @@ public class CalendarResource {
         return token;
     }
 
-    @ApiOperation("Rertrieve participant calendar")
+    @ApiOperation("Retrieve participant's calendar")
     @GET
-    public CalendarForParticipant getCalendar(@HeaderParam("X-Participant") String participantToken) {
+    public CalendarForParticipant getCalendar(@HeaderParam("X-Participant") @NotEmpty String participantToken) {
         Calendar cal = calendarService.findCalendarByName(companyName(participantToken));
-        return CalendarForParticipant.from(cal);
+        String participantId = authTokenService.parseParticipantId(participantToken);
+        return CalendarForParticipant.from(cal, participantId);
     }
 
-
-
-
+    @ApiOperation("Open a participant's calendar door")
+    @POST
+    @Path("/doors/{doorNumber}/open")
+    public DoorForParticipant openCalendarDoor(@HeaderParam("X-Participant") @NotEmpty String participantToken,
+                                 @PathParam("doorNumber") @Min(1) @Max(24) Integer doorNumber) {
+        Calendar cal = calendarService.findCalendarByName(companyName(participantToken));
+        String participantId = authTokenService.parseParticipantId(participantToken);
+        Door door = cal.getDoors().get(doorNumber - 1);
+        door.getOpenedBy().add(participantId);
+        calendarRepository.save(cal);
+        DoorForParticipant doorForParticipant = DoorForParticipant.fullRepresentationOf(door, participantId);
+        return doorForParticipant;
+    }
 
     private String participantId(String token) {
         try {

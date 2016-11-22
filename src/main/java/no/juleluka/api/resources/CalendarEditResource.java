@@ -115,7 +115,7 @@ public class CalendarEditResource {
     @ApiOperation("Add a calendar participant")
     @POST
     @Path("/participants")
-    public void addParticipant(@HeaderParam("Authorization") @NotEmpty String authToken,
+    public ParticipantAdmin addParticipant(@HeaderParam("Authorization") @NotEmpty String authToken,
                            final @Valid ParticipantNew newParticipant) {
         Calendar cal = calendarService.findCalendarById(calendarId(authToken));
 
@@ -129,8 +129,11 @@ public class CalendarEditResource {
             throw new WebApplicationException("Participant with name '" + newParticipant.getName() + "' already exists.", Response.Status.CONFLICT);
         }
 
-        cal.getParticipants().add(new Participant(newParticipant.getName()));
+        Participant participant = new Participant(newParticipant.getName());
+        cal.getParticipants().add(participant);
         calendarRepository.save(cal);
+
+        return ParticipantAdmin.from(participant);
     }
 
     @ApiOperation("Delete a calendar participant")

@@ -11,7 +11,9 @@ import org.bson.types.ObjectId;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -71,4 +73,13 @@ public class CalendarService {
 
         return calendarId;
     }
+/*
+    public Set<String> calculateWinners(Calendar calendar) {
+        int winnersPerDay = (calendar.getWinnersPerDay() != null) ? calendar.getWinnersPerDay() : 1;
+        Set<String> winners = new HashSet();
+        for (int i=0; i<winnersPerDay; i++) {
+            winners.add(calendar.getParticipants().)
+        }
+    }
+*/
 }

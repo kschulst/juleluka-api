@@ -1,6 +1,7 @@
 package no.juleluka.api.resources;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import io.swagger.annotations.Api;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.Response;
 
 import java.util.Optional;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Objects.requireNonNull;
 
 @Api("calendar - edit")
@@ -49,19 +51,6 @@ public class CalendarEditResource {
         this.authTokenService = requireNonNull(authTokenService);
     }
 
-    @ApiOperation("Create a new calendar")
-    @POST
-    public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {
-        // Don't create the calendar if a calendar for that companyName is already registered
-        if (calendarRepository.findOne("companyName", newCalendar) != null) {
-            throw new WebApplicationException("Calendar for '" + newCalendar.getCompanyName() + "' already exists.", Response.Status.CONFLICT);
-        };
-
-        Calendar cal = newCalendar.toCalendar();
-        calendarRepository.save(cal);
-        return CalendarAdmin.from(cal);
-    }
-
     @ApiOperation("Authorize for calendar editing")
     @POST
     @Path("/auth")
@@ -82,14 +71,38 @@ public class CalendarEditResource {
         return calAuth;
     }
 
-    @ApiOperation("Retrieve calendar for administration by id")
+    @ApiOperation("Create a new calendar")
+    @POST
+    public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {
+        // Don't create the calendar if a calendar for that companyName is already registered
+        if (calendarRepository.findOne("companyName", newCalendar) != null) {
+            throw new WebApplicationException("Calendar for '" + newCalendar.getCompanyName() + "' already exists.", Response.Status.CONFLICT);
+        };
+
+        Calendar cal = newCalendar.toCalendar();
+        calendarRepository.save(cal);
+        return CalendarAdmin.from(cal);
+    }
+
+    @ApiOperation("Retrieve calendar")
     @GET
     public CalendarAdmin getCalendarById(@HeaderParam("Authorization") @NotEmpty String authToken) {
         Calendar cal = calendarService.findCalendarById(calendarId(authToken));
         return CalendarAdmin.from(cal);
     }
 
-    @ApiOperation("Update a calendar door")
+    @ApiOperation("Update calendar")
+    @PUT
+    public CalendarAdmin updateCalendar(@HeaderParam("Authorization") @NotEmpty String authToken,
+                                        @Valid CalendarUpdate c) {
+        Calendar calendar = calendarService.findCalendarById(calendarId(authToken));
+        c.populateCalendar(calendar);
+        calendarRepository.save(calendar);
+        return CalendarAdmin.from(calendar);
+    }
+
+
+    @ApiOperation("Update calendar door")
     @PUT
     @Path("/doors/{doorNumber}")
     public void updateDoor(@HeaderParam("Authorization") @NotEmpty String authToken,

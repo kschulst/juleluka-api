@@ -18,6 +18,7 @@ public class Door {
     private String prize;
     private String quote;
     private String instructions;
+    private String imageUrl;
     private Set<String> openedBy = new HashSet();
     private Set<String> winners = new HashSet();
 

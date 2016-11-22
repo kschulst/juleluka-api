@@ -101,15 +101,15 @@ public class CalendarEditResource {
     @ApiOperation("Update calendar door")
     @PUT
     @Path("/doors/{doorNumber}")
-    public void updateDoor(@HeaderParam("Authorization") @NotEmpty String authToken,
+    public DoorAdmin updateDoor(@HeaderParam("Authorization") @NotEmpty String authToken,
                            @PathParam("doorNumber") @Min(1) @Max(24) Integer doorNumber,
-                           @Valid DoorAdmin doorToUpdate) {
+                           @Valid DoorUpdate doorUpdate) {
         Calendar cal = calendarService.findCalendarById(calendarId(authToken));
-        Door door = doorToUpdate.toDoor();
-        door.setNumber(doorNumber); // TODO: Two separate models for Doors (request vs response)
-        cal.getDoors().set(doorNumber-1, doorToUpdate.toDoor());
-
+        Door door = cal.getDoor(doorNumber);
+        doorUpdate.populateDoor(door);
+        cal.setDoor(doorNumber, door);
         calendarRepository.save(cal);
+        return DoorAdmin.from(door);
     }
 
     @ApiOperation("Add a calendar participant")

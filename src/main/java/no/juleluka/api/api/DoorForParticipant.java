@@ -5,7 +5,7 @@ import lombok.Data;
 import no.juleluka.api.models.Door;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static no.juleluka.api.models.mappers.ModelMappers.LOOSE_MAPPER;
+import static no.juleluka.api.models.mappers.ModelMappers.looseMapper;
 
 @Data
 @JsonInclude(NON_NULL)
@@ -17,9 +17,10 @@ public class DoorForParticipant {
     private String prize;
     private String quote;
     private String instructions;
+    private String imageUrl;
 
     public static DoorForParticipant openRepresentationOf(Door door, String participantId) {
-        DoorForParticipant doorForParticipant = LOOSE_MAPPER.map(door, DoorForParticipant.class);
+        DoorForParticipant doorForParticipant = looseMapper().map(door, DoorForParticipant.class);
         doorForParticipant.setOpen(door.getOpenedBy().contains(participantId));
         doorForParticipant.setAvailable(door.isAvailable());
         if (door.getWinners().size() > 0) { // Only set win if winners have been announced
@@ -33,6 +34,7 @@ public class DoorForParticipant {
         doorForParticipant.setInstructions(null);
         doorForParticipant.setPrize(null);
         doorForParticipant.setQuote(null);
+        doorForParticipant.setImageUrl(null);
 
         return doorForParticipant;
     }

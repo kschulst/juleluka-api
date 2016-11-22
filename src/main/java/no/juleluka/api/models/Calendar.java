@@ -30,4 +30,11 @@ public class Calendar {
         return this;
     }
 
+    public Door getDoor(int doorNumber) {
+        return getDoors().get(doorNumber-1);
+    }
+
+    public void setDoor(int doorNumber, Door door) {
+        getDoors().set(doorNumber-1, door);
+    }
 }

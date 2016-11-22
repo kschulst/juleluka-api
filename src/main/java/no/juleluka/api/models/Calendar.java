@@ -13,7 +13,7 @@ public class Calendar {
     @Id private ObjectId id;
     private String companyName; // TODO: Rename to calendarName
     private String adminPassword;
-    private Boolean editable;
+    private Integer winnersPerDay;
     private List<Integer> doorSequence;
     private List<Door> doors = new ArrayList();
     private Set<Participant> participants = new HashSet<>();
@@ -28,4 +28,5 @@ public class Calendar {
         this.editable = true;
         return this;
     }
+
 }

@@ -15,6 +15,7 @@ import static no.juleluka.api.models.mappers.ModelMappers.LOOSE_MAPPER;
 public class CalendarAdmin {
     private String id;
     private String companyName;
+    private Integer winnersPerDay;
     private List<Integer> doorSequence;
     private List<DoorAdmin> doors;
     private Set<ParticipantAdmin> participants;

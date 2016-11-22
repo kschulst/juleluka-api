@@ -1,5 +1,6 @@
 package no.juleluka.api;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -27,6 +28,8 @@ public class JulelukaApplication extends Application<JulelukaConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<JulelukaConfiguration> bootstrap) {
+        bootstrap.getObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
 
         // Ref: https://github.com/smoketurner/dropwizard-swagger
         bootstrap.addBundle(new SwaggerBundle<JulelukaConfiguration>() {

@@ -20,6 +20,8 @@ import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -91,9 +93,12 @@ public class CalendarResource {
         Calendar cal = calendarService.findCalendarByName(companyName(participantToken));
         String participantId = authTokenService.parseParticipantId(participantToken);
         Door door = cal.getDoors().get(doorNumber - 1);
+        if (! door.isAvailable()) {
+            throw new WebApplicationException("Door number " + doorNumber + " is not available yet.", Response.Status.BAD_REQUEST);
+        }
         door.getOpenedBy().add(participantId);
         calendarRepository.save(cal);
-        DoorForParticipant doorForParticipant = DoorForParticipant.fullRepresentationOf(door, participantId);
+        DoorForParticipant doorForParticipant = DoorForParticipant.openRepresentationOf(door, participantId);
         return doorForParticipant;
     }
 
@@ -114,5 +119,12 @@ public class CalendarResource {
             throw new WebApplicationException("Unable to determine companyName from token", Response.Status.BAD_REQUEST);
         }
     }
-
+/*
+    private Set<String> calculateWinners(Calendar calendar) {
+        Set<String> winners = new HashSet();
+        for (int i=0; i<calendar.getWinnersPerDay(); i++) {
+            winners.add(calendar.getParticipants().)
+        }
+    }
+*/
 }

@@ -22,9 +22,18 @@ public class CalendarForParticipant {
         CalendarForParticipant cal = LOOSE_MAPPER.map(c, CalendarForParticipant.class);
 
         for (Door door : c.getDoors()) {
-            DoorForParticipant doorForParticipant = DoorForParticipant.minimalRepresentationOf(door, participantId);
+            if (door.isOpened(participantId)) {
+                cal.updateDoor(DoorForParticipant.openRepresentationOf(door, participantId));
+            }
+            else {
+                cal.updateDoor(DoorForParticipant.closedRepresentationOf(door, participantId));
+            }
         }
 
         return cal;
+    }
+
+    public void updateDoor(DoorForParticipant door) {
+        doors.set(door.getNumber()-1, door);
     }
 }

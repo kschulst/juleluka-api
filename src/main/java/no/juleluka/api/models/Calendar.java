@@ -13,6 +13,8 @@ public class Calendar {
     @Id private ObjectId id;
     private String companyName; // TODO: Rename to calendarName
     private String adminPassword;
+    private String logoUrl;
+    private String contactEmail;
     private Integer winnersPerDay;
     private List<Integer> doorSequence;
     private List<Door> doors = new ArrayList();

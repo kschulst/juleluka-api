@@ -17,6 +17,7 @@ public class CalendarAdmin {
     private String companyName;
     private String logoUrl;
     private String contactEmail;
+    private Boolean doorsAlwaysAvailable;
     private Integer winnersPerDay;
     private List<Integer> doorSequence;
     private List<DoorAdmin> doors;

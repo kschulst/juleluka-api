@@ -19,18 +19,18 @@ public class DoorForParticipant {
     private String instructions;
     private String imageUrl;
 
-    public static DoorForParticipant openRepresentationOf(Door door, String participantId) {
+    public static DoorForParticipant openRepresentationOf(Door door, String participantId, boolean doorsAlwaysAvailableFlag) {
         DoorForParticipant doorForParticipant = looseMapper().map(door, DoorForParticipant.class);
         doorForParticipant.setOpen(door.getOpenedBy().contains(participantId));
-        doorForParticipant.setAvailable(door.isAvailable());
+        doorForParticipant.setAvailable(door.isAvailable(doorsAlwaysAvailableFlag));
         if (door.getWinners().size() > 0) { // Only set win if winners have been announced
             doorForParticipant.setWin(door.getWinners().contains(participantId));
         }
         return doorForParticipant;
     }
 
-    public static DoorForParticipant closedRepresentationOf(Door door, String participantId) {
-        DoorForParticipant doorForParticipant = openRepresentationOf(door, participantId);
+    public static DoorForParticipant closedRepresentationOf(Door door, String participantId, boolean doorsAlwaysAvailableFlag) {
+        DoorForParticipant doorForParticipant = openRepresentationOf(door, participantId, doorsAlwaysAvailableFlag);
         doorForParticipant.setInstructions(null);
         doorForParticipant.setPrize(null);
         doorForParticipant.setQuote(null);

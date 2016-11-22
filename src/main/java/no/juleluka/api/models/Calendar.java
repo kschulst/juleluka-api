@@ -16,6 +16,10 @@ public class Calendar {
     private String logoUrl;
     private String contactEmail;
     private Integer winnersPerDay;
+
+    /** Whether or not date validation will be performed on door opening */
+    private Boolean doorsAlwaysAvailable;
+
     private List<Integer> doorSequence;
     private List<Door> doors = new ArrayList();
     private Set<Participant> participants = new HashSet<>();

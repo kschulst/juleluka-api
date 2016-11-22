@@ -36,9 +36,10 @@ public class Door {
      * OR
      * 2) The date is after 2016-12-01 AND day of month is GTE the door number
      */
-    public boolean isAvailable() {
-        return LocalDate.now().isAfter(LocalDate.of(2016, 12, 24)) ||
-              (LocalDate.now().isAfter(LocalDate.of(2016, 12, 1)) && LocalDate.now().getDayOfMonth() >= number);
+    public boolean isAvailable(boolean alwaysAvailable) {
+        return alwaysAvailable ||
+               LocalDate.now().isAfter(LocalDate.of(2016, 12, 24)) ||
+               (LocalDate.now().isAfter(LocalDate.of(2016, 12, 1)) && LocalDate.now().getDayOfMonth() >= number);
     }
 
 }

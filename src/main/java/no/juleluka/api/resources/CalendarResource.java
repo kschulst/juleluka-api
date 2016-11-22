@@ -89,16 +89,17 @@ public class CalendarResource {
     @POST
     @Path("/doors/{doorNumber}/open")
     public DoorForParticipant openCalendarDoor(@HeaderParam("X-Participant") @NotEmpty String participantToken,
-                                 @PathParam("doorNumber") @Min(1) @Max(24) Integer doorNumber) {
+                                               @PathParam("doorNumber") @Min(1) @Max(24) Integer doorNumber) {
         Calendar cal = calendarService.findCalendarByName(companyName(participantToken));
         String participantId = authTokenService.parseParticipantId(participantToken);
         Door door = cal.getDoors().get(doorNumber - 1);
-        if (! door.isAvailable()) {
+
+        if (! door.isAvailable(cal.getDoorsAlwaysAvailable())) {
             throw new WebApplicationException("Door number " + doorNumber + " is not available yet.", Response.Status.BAD_REQUEST);
         }
         door.getOpenedBy().add(participantId);
         calendarRepository.save(cal);
-        DoorForParticipant doorForParticipant = DoorForParticipant.openRepresentationOf(door, participantId);
+        DoorForParticipant doorForParticipant = DoorForParticipant.openRepresentationOf(door, participantId, cal.getDoorsAlwaysAvailable());
         return doorForParticipant;
     }
 

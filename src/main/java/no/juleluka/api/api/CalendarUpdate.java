@@ -27,6 +27,8 @@ public class CalendarUpdate {
     @Min(0)
     private Integer winnersPerDay;
 
+    private Boolean doorsAlwaysAvailable;
+
     public void populateCalendar(Calendar calendar) {
         nonNullMapper().map(this, calendar);
     }

@@ -23,10 +23,10 @@ public class CalendarForParticipant {
 
         for (Door door : c.getDoors()) {
             if (door.isOpened(participantId)) {
-                cal.updateDoor(DoorForParticipant.openRepresentationOf(door, participantId));
+                cal.updateDoor(DoorForParticipant.openRepresentationOf(door, participantId, c.getDoorsAlwaysAvailable()));
             }
             else {
-                cal.updateDoor(DoorForParticipant.closedRepresentationOf(door, participantId));
+                cal.updateDoor(DoorForParticipant.closedRepresentationOf(door, participantId, c.getDoorsAlwaysAvailable()));
             }
         }
 

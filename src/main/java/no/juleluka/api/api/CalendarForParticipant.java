@@ -6,9 +6,10 @@ import no.juleluka.api.models.Calendar;
 import no.juleluka.api.models.Door;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static no.juleluka.api.models.mappers.ModelMappers.LOOSE_MAPPER;
+import static no.juleluka.api.models.mappers.ModelMappers.looseMapper;
 
 @Data
 @JsonInclude(NON_NULL)
@@ -19,14 +20,16 @@ public class CalendarForParticipant {
     private List<DoorForParticipant> doors;
 
     public static CalendarForParticipant from(Calendar c, String participantId) {
-        CalendarForParticipant cal = LOOSE_MAPPER.map(c, CalendarForParticipant.class);
+        CalendarForParticipant cal = looseMapper().map(c, CalendarForParticipant.class);
+        boolean isDoorsAlwaysAvailable  = Optional.ofNullable(c.getDoorsAlwaysAvailable()).orElse(false);
+
 
         for (Door door : c.getDoors()) {
             if (door.isOpened(participantId)) {
-                cal.updateDoor(DoorForParticipant.openRepresentationOf(door, participantId, c.getDoorsAlwaysAvailable()));
+                cal.updateDoor(DoorForParticipant.openRepresentationOf(door, participantId, isDoorsAlwaysAvailable));
             }
             else {
-                cal.updateDoor(DoorForParticipant.closedRepresentationOf(door, participantId, c.getDoorsAlwaysAvailable()));
+                cal.updateDoor(DoorForParticipant.closedRepresentationOf(door, participantId, isDoorsAlwaysAvailable));
             }
         }
 

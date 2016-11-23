@@ -1,7 +1,5 @@
 package no.juleluka.api.resources;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import io.jsonwebtoken.JwtException;
@@ -18,7 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -80,13 +80,14 @@ public class CalendarService {
 
     public Set<String> calculateWinners(Calendar calendar) {
         int winnersPerDay = (calendar.getWinnersPerDay() != null) ? calendar.getWinnersPerDay() : 1;
-        List<String> winners = FluentIterable.from(calendar.getParticipants())
-                .transform(new Function<Participant, String>() {
+        winnersPerDay = Math.min(winnersPerDay, calendar.getParticipants().size());
+        List<String> winners = calendar.getParticipants().stream()
+                .map(new Function<Participant, String>() {
                     public String apply(Participant participant) {
                         return participant.getId();
                     }
                 })
-                .toList();
+                .collect(Collectors.toList());
         Collections.shuffle(winners);
         return ImmutableSet.copyOf(winners.subList(0, winnersPerDay));
     }

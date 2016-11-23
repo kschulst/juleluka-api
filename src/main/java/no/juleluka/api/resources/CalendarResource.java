@@ -21,6 +21,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -103,7 +104,8 @@ public class CalendarResource {
         }
         door.getOpenedBy().add(participantId);
         calendarRepository.save(cal);
-        DoorForParticipant doorForParticipant = DoorForParticipant.openRepresentationOf(door, participantId, cal.getDoorsAlwaysAvailable());
+        boolean isDoorsAlwaysAvailable  = Optional.ofNullable(cal.getDoorsAlwaysAvailable()).orElse(false);
+        DoorForParticipant doorForParticipant = DoorForParticipant.openRepresentationOf(door, participantId, isDoorsAlwaysAvailable);
         return doorForParticipant;
     }
 

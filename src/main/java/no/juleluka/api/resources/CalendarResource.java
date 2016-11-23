@@ -94,8 +94,9 @@ public class CalendarResource {
         Calendar cal = calendarService.findCalendarByName(companyName(participantToken));
         String participantId = authTokenService.parseParticipantId(participantToken);
         Door door = cal.getDoors().get(doorNumber - 1);
+        boolean isDoorsAlwaysAvailable  = Optional.ofNullable(cal.getDoorsAlwaysAvailable()).orElse(false);
 
-        if (! door.isAvailable(cal.getDoorsAlwaysAvailable())) {
+        if (! door.isAvailable(isDoorsAlwaysAvailable)) {
             throw new WebApplicationException("Door number " + doorNumber + " is not available yet.", Response.Status.BAD_REQUEST);
         }
         // Calculate winners if winners have not yet been calculated
@@ -104,7 +105,6 @@ public class CalendarResource {
         }
         door.getOpenedBy().add(participantId);
         calendarRepository.save(cal);
-        boolean isDoorsAlwaysAvailable  = Optional.ofNullable(cal.getDoorsAlwaysAvailable()).orElse(false);
         DoorForParticipant doorForParticipant = DoorForParticipant.openRepresentationOf(door, participantId, isDoorsAlwaysAvailable);
         return doorForParticipant;
     }

@@ -97,6 +97,10 @@ public class CalendarResource {
         if (! door.isAvailable(cal.getDoorsAlwaysAvailable())) {
             throw new WebApplicationException("Door number " + doorNumber + " is not available yet.", Response.Status.BAD_REQUEST);
         }
+        // Calculate winners if winners have not yet been calculated
+        if (door.getWinners().isEmpty()) {
+            door.setWinners(calendarService.calculateWinners(cal));
+        }
         door.getOpenedBy().add(participantId);
         calendarRepository.save(cal);
         DoorForParticipant doorForParticipant = DoorForParticipant.openRepresentationOf(door, participantId, cal.getDoorsAlwaysAvailable());
@@ -120,12 +124,5 @@ public class CalendarResource {
             throw new WebApplicationException("Unable to determine companyName from token", Response.Status.BAD_REQUEST);
         }
     }
-/*
-    private Set<String> calculateWinners(Calendar calendar) {
-        Set<String> winners = new HashSet();
-        for (int i=0; i<calendar.getWinnersPerDay(); i++) {
-            winners.add(calendar.getParticipants().)
-        }
-    }
-*/
+
 }

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import no.juleluka.api.models.Door;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static no.juleluka.api.models.mappers.ModelMappers.LOOSE_MAPPER;
 import static no.juleluka.api.models.mappers.ModelMappers.looseMapper;
@@ -16,6 +19,8 @@ public class DoorAdmin {
     private String quote;
     private String instructions;
     private String imageUrl;
+    private Set<String> openedBy = new HashSet();
+    private Set<String> winners = new HashSet();
 
     public Door toDoor() {
         return looseMapper().map(this, Door.class);

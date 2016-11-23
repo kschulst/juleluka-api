@@ -1,17 +1,21 @@
 package no.juleluka.api.resources;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import no.juleluka.api.core.security.AuthTokenService;
-import no.juleluka.api.db.AuthTokenRepository;
 import no.juleluka.api.db.CalendarRepository;
 import no.juleluka.api.models.Calendar;
+import no.juleluka.api.models.Participant;
 import org.bson.types.ObjectId;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -73,13 +77,18 @@ public class CalendarService {
 
         return calendarId;
     }
-/*
+
     public Set<String> calculateWinners(Calendar calendar) {
         int winnersPerDay = (calendar.getWinnersPerDay() != null) ? calendar.getWinnersPerDay() : 1;
-        Set<String> winners = new HashSet();
-        for (int i=0; i<winnersPerDay; i++) {
-            winners.add(calendar.getParticipants().)
-        }
+        List<String> winners = FluentIterable.from(calendar.getParticipants())
+                .transform(new Function<Participant, String>() {
+                    public String apply(Participant participant) {
+                        return participant.getId();
+                    }
+                })
+                .toList();
+        Collections.shuffle(winners);
+        return ImmutableSet.copyOf(winners.subList(0, winnersPerDay));
     }
-*/
+
 }

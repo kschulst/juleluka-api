@@ -71,7 +71,7 @@ public class CalendarEditResource {
     @POST
     public CalendarAdmin createCalendar(@Valid CalendarNew newCalendar) {
         // Don't create the calendar if a calendar for that companyName is already registered
-        if (calendarRepository.findOne("companyName", newCalendar) != null) {
+        if (calendarRepository.findOne("companyName", newCalendar.getCompanyName()) != null) {
             throw new WebApplicationException("Calendar for '" + newCalendar.getCompanyName() + "' already exists.", Response.Status.CONFLICT);
         };
 

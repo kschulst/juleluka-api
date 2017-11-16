@@ -15,8 +15,6 @@ public class DoorUpdate {
     private String prize;
     private String quote;
     private String instructions;
-
-    @Size(min=7, max=256)
     private String imageUrl;
 
     public void populateDoor(Door door) {

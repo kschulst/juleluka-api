@@ -32,14 +32,14 @@ public class Door {
 
     /**
      * The door is considered available if:
-     * 1) The date is after 2016-12-24
+     * 1) The date is after 2017-12-24
      * OR
-     * 2) The date is after 2016-12-01 AND day of month is GTE the door number
+     * 2) The date is after 2017-12-01 AND day of month is GTE the door number
      */
     public boolean isAvailable(boolean alwaysAvailable) {
         return alwaysAvailable ||
-               LocalDate.now().isAfter(LocalDate.of(2016, 12, 24)) ||
-               (LocalDate.now().isAfter(LocalDate.of(2016, 12, 1)) && LocalDate.now().getDayOfMonth() >= number);
+               LocalDate.now().isAfter(LocalDate.of(2017, 12, 24)) ||
+               (LocalDate.now().isAfter(LocalDate.of(2017, 12, 1)) && LocalDate.now().getDayOfMonth() >= number);
     }
 
 }
